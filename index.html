@@ -145,27 +145,24 @@
               gameInstance = unityInstance;
               document.querySelector("#unity-loading-bar").style.display = "none";
             })
+              // --- AudioContext fix ---
+    function resumeAudio() {
+        if (gameInstance && gameInstance.Module && gameInstance.Module.audioContext) {
+            gameInstance.Module.audioContext.resume().then(() => {
+                console.log("AudioContext resumed!");
+            });
+        }
+        document.removeEventListener('click', resumeAudio);
+        document.removeEventListener('touchstart', resumeAudio);
+    }
+    document.addEventListener('click', resumeAudio);
+    document.addEventListener('touchstart', resumeAudio);
+    // --- End AudioContext fix ---
                     })
         .then((unityInstance) => {
             gameInstance = unityInstance;
             document.querySelector("#unity-loading-bar").style.display = "none";
 
-            // --- AudioContext fix ---
-            function resumeAudio() {
-                if (gameInstance && gameInstance.Module && gameInstance.Module.audioContext) {
-                    gameInstance.Module.audioContext.resume().then(() => {
-                        console.log("AudioContext resumed!");
-                    });
-                }
-                document.removeEventListener('click', resumeAudio);
-                document.removeEventListener('touchstart', resumeAudio);
-            }
-            document.addEventListener('click', resumeAudio);
-            document.addEventListener('touchstart', resumeAudio);
-            .catch((message) => {
-              alert(message);
-            });
-        };
         document.querySelector("#unity-loading-bar").style.display = "block";
         document.body.appendChild(script);
       }
