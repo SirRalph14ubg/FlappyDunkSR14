@@ -148,6 +148,26 @@
               gameInstance = unityInstance;
               document.querySelector("#unity-loading-bar").style.display = "none";
             })
+ // --- AudioContext fix (only attach after gameInstance is ready) ---
+    const attachAudioResume = () => {
+        if (!gameInstance || !gameInstance.Module) return;
+
+        function resumeAudio() {
+            if (gameInstance.Module.audioContext) {
+                gameInstance.Module.audioContext.resume().then(() => {
+                    console.log("AudioContext resumed!");
+                });
+            }
+            document.removeEventListener('click', resumeAudio);
+            document.removeEventListener('touchstart', resumeAudio);
+        }
+        document.addEventListener('click', resumeAudio);
+        document.addEventListener('touchstart', resumeAudio);
+    };
+
+    attachAudioResume();
+    // --- end AudioContext fix ---
+})
             .catch((message) => {
               alert(message);
             });
